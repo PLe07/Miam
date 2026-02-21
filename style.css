@@ -128,3 +128,58 @@ canvas {
     cursor: pointer;
     margin-bottom: 10px;
 }
+
+/* ... garde tes couleurs de saison en haut ... */
+
+.app-container {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    max-width: 450px; /* Force le look téléphone même sur ordi */
+    margin: 0 auto;
+}
+
+.wheel-area {
+    flex-grow: 1; /* La roue prend tout l'espace central libre */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+canvas {
+    max-width: 320px; /* Taille parfaite pour mobile */
+    width: 80vw;
+    height: auto;
+}
+
+/* LA ZONE MAGIQUE */
+.result-zone {
+    height: 80px; /* TAILLE FIXE BLOQUÉE */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#result-text {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+    width: 90%;
+}
+
+#spin-btn {
+    width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
