@@ -63,7 +63,7 @@ function drawWheel() {
 spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     isSpinning = true;
-    resultText.innerHTML = "Suspense... 🎲";
+    resultText.innerHTML = "Suspense...";
     recipeLink.style.display = "none";
     const segments = dataPlats[currentSeason];
     const spinAngle = Math.floor(Math.random() * 3600) + 2000;
@@ -75,9 +75,9 @@ spinBtn.addEventListener('click', () => {
         const actualDeg = currentRotation % 360;
         const index = Math.floor(((360 - actualDeg + 270) % 360) / (360 / segments.length));
         const platGagnant = segments[index];
-        resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
-        recipeLink.href = `https://www.google.com/search?q=recette+${encodeURIComponent(platGagnant)}`;
-        recipeLink.style.display = "inline-block";
+        resultText.innerHTML = `<strong>${platGagnant}</strong>`;
+        // On remplace la recherche Google par la recherche directe sur Cookidoo
+        recipeLink.href = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;        recipeLink.style.display = "inline-block";
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
         if (window.navigator.vibrate) window.navigator.vibrate(100);
     }, 4000);
