@@ -99,8 +99,9 @@ spinBtn.addEventListener('click', () => {
         // Affichage du plat
         resultText.innerHTML = `<strong>${platGagnant}</strong>`;
 
-        // Mise à jour du lien Cookidoo
+        // Mise à jour du lien Thermomix (Cookidoo)
         recipeLink.href = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
+        recipeLink.innerHTML = "Thermomix"; // <-- AJOUTE CETTE LIGNE ICI
         recipeLink.style.display = "inline-block";
 
         // Effets visuels
