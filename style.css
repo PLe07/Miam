@@ -140,3 +140,22 @@ canvas {
 #spin-btn:active {
     transform: scale(0.96);
 }
+
+#recipe-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: white;
+    text-decoration: none;
+    background: var(--accent-color);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
