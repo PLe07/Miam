@@ -1,9 +1,37 @@
-<div class="menu-container">
-    <h1>Qu'est-ce qu'on mange ?</h1>
-    <div class="wheel-wrapper">
-        <canvas id="wheel" width="500" height="500"></canvas>
-        <div id="pointer"></div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Roue des Menus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="season-printemps"> <div class="app-container">
+        <header>
+            <h1>🍽️ Qu'est-ce qu'on mange ?</h1>
+            <nav id="season-menu">
+                <button onclick="changeSeason('printemps')" class="btn-season active" data-season="printemps">🌱 Printemps</button>
+                <button onclick="changeSeason('ete')" class="btn-season" data-season="ete">☀️ Été</button>
+                <button onclick="changeSeason('automne')" class="btn-season" data-season="automne">🍂 Automne</button>
+                <button onclick="changeSeason('hiver')" class="btn-season" data-season="hiver">❄️ Hiver</button>
+            </nav>
+        </header>
+
+        <main>
+            <div class="wheel-area">
+                <div id="pointer"></div>
+                <canvas id="wheel" width="600" height="600"></canvas>
+            </div>
+            
+            <div class="controls">
+                <button id="spin-btn">LANCER LA ROUE !</button>
+                <div id="result-container">
+                    <p id="result-text">Choisissez une saison et tournez la roue !</p>
+                </div>
+            </div>
+        </main>
     </div>
-    <button id="spin-btn">Lancer la roue !</button>
-    <h2 id="result"></h2>
-</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
