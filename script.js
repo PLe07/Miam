@@ -81,7 +81,7 @@ spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     isSpinning = true;
     
-    resultText.innerHTML = "Suspense... 🎲";
+    resultText.innerHTML = "Suspense... ";
     recipeLink.style.display = "none";
     whatsappLink.style.display = "none";
     
@@ -92,26 +92,38 @@ spinBtn.addEventListener('click', () => {
     canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     canvas.style.transform = `rotate(${currentRotation}deg)`;
     
-    setTimeout(() => {
-        isSpinning = false;
-        const actualDeg = currentRotation % 360;
-        const index = Math.floor(((360 - actualDeg + 270) % 360) / (360 / segments.length));
-        const platGagnant = segments[index];
+   setTimeout(() => {
+    isSpinning = false;
+    const actualDeg = currentRotation % 360;
+    const segments = dataPlats[currentSeason];
+    const index = Math.floor(((360 - actualDeg + 270) % 360) / (360 / segments.length));
+    const platGagnant = segments[index];
 
-        resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
+    // Affichage du plat
+    resultText.innerHTML = `<strong>${platGagnant}</strong>`;
 
-        const cookidooUrl = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
-        recipeLink.href = cookidooUrl;
-        recipeLink.style.display = "inline-block";
+    // 1. Mise à jour du lien Cookidoo
+    const cookidooUrl = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
+    recipeLink.href = cookidooUrl;
+    recipeLink.style.display = "inline-block";
 
-        const message = `Ce soir on mange : ${platGagnant} ! 🍽️\nTrouve la recette ici : ${cookidooUrl}`;
-        whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
-        whatsappLink.style.display = "inline-block";
+    // 2. Mise à jour du bouton Liste de Courses (WhatsApp)
+    // On crée un message formaté avec des cases à cocher vides pour que tu puisses les remplir
+    const messageShopping = `🛒 *LISTE DE COURSES : ${platGagnant.toUpperCase()}*\n\n` +
+                            `- [ ] \n` +
+                            `- [ ] \n` +
+                            `- [ ] \n\n` +
+                            `🔗 Recette Cookidoo : ${cookidooUrl}`;
+    
+    whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(messageShopping)}`;
+    whatsappLink.innerHTML = `🛒 Liste de courses`; // Changement du texte du bouton
+    whatsappLink.style.display = "inline-block";
 
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
-        if (window.navigator.vibrate) window.navigator.vibrate(100);
+    // Effets visuels
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
+    if (window.navigator.vibrate) window.navigator.vibrate(100);
 
-    }, 4000);
+}, 4000);
 });
 
 drawWheel();
