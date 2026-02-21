@@ -152,7 +152,7 @@ canvas {
     background: #2c3e50;
     color: white;
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
     cursor: pointer;
     transition: transform 0.1s;
 }
