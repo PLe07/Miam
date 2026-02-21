@@ -90,7 +90,7 @@ spinBtn.addEventListener('click', () => {
         const segmentAngle = 360 / segments.length;
         // Calcul de l'index pointé (le pointeur est en haut à 270 deg par rapport au canvas)
         const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
-        resultText.innerHTML = `✨ Ce soir c'est : <strong>${segments[index]}</strong> ! 🍽️`;
+        resultText.innerHTML = `✨ On mange : <strong>${segments[index]}</strong> ! 🍽️`;
     }, 4000);
 });
 
