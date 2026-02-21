@@ -20,17 +20,17 @@ html, body {
     overflow: hidden;
     transition: background 0.5s ease;
 }
-
 .app-container {
     background-color: var(--bg-color);
-    width: 100%;
-    max-width: 1000px;
+    width: 100%; /* Prend toute la largeur */
+    max-width: none; /* Supprime la limite des 1000px */
     height: 100dvh;
     display: flex;
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
     transition: background 0.5s ease;
+    align-items: center; /* Garde le contenu centré horizontalement */
 }
 
 header h1 { 
