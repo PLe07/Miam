@@ -3,7 +3,6 @@ const ctx = canvas.getContext('2d');
 const resultText = document.getElementById('result-text');
 const spinBtn = document.getElementById('spin-btn');
 const recipeLink = document.getElementById('recipe-link');
-const whatsappLink = document.getElementById('whatsapp-link');
 
 canvas.width = 600;
 canvas.height = 600;
@@ -107,17 +106,7 @@ spinBtn.addEventListener('click', () => {
     recipeLink.href = cookidooUrl;
     recipeLink.style.display = "inline-block";
 
-    // 2. Mise à jour du bouton Liste de Courses (WhatsApp)
-    // On crée un message formaté avec des cases à cocher vides pour que tu puisses les remplir
-    const messageShopping = `🛒 *LISTE DE COURSES : ${platGagnant.toUpperCase()}*\n\n` +
-                            `- [ ] \n` +
-                            `- [ ] \n` +
-                            `- [ ] \n\n` +
-                            `🔗 Recette Cookidoo : ${cookidooUrl}`;
-    
-    whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(messageShopping)}`;
-    whatsappLink.innerHTML = `🛒 Liste de courses`; // Changement du texte du bouton
-    whatsappLink.style.display = "inline-block";
+  
 
     // Effets visuels
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
