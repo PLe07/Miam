@@ -33,7 +33,7 @@ function changeSeason(season) {
         btn.classList.toggle('active', btn.dataset.season === season);
     });
     drawWheel();
-    resultText.innerHTML = `Prêt pour un menu d' <strong>${season}</strong> ?`;
+    resultText.innerHTML = `Prêt pour un menu d'<strong>${season}</strong> ?`;
 }
 
 function getAccentColor() {
