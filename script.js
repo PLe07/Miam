@@ -80,7 +80,7 @@ spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     isSpinning = true;
     
-    resultText.innerHTML = "Suspense... 🎲";
+    resultText.innerHTML = "Suspense...";
     recipeLink.style.display = "none";
     
     const segments = dataPlats[currentSeason];
@@ -97,7 +97,7 @@ spinBtn.addEventListener('click', () => {
         const platGagnant = segments[index];
 
         // Affichage du plat
-        resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
+        resultText.innerHTML = `<strong>${platGagnant}</strong>`;
 
         // Mise à jour du lien Cookidoo
         recipeLink.href = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
