@@ -133,8 +133,8 @@ html, body {
 /* La roue devient flexible en taille */
 .wheel-area {
     position: relative;
-    width: 85vw; /* 85% de la largeur de l'écran */
-    height: 85vw;
+    width: 80vw; /* 85% de la largeur de l'écran */
+    height: 80vw;
     max-width: 400px;
     max-height: 400px;
     margin: 0 auto;
@@ -148,10 +148,10 @@ html, body {
 /* Bouton plus gros pour le pouce */
 #spin-btn {
     width: 100%;
-    padding: 20px;
+    padding: 18px;
     font-size: 1.2rem;
-    border-radius: 15px;
-    margin-bottom: 20px;
+    border-radius: 13.5px;
+    margin-bottom: 18px;
 }
 
 #season-menu {
