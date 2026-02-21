@@ -96,7 +96,7 @@ spinBtn.addEventListener('click', () => {
         // Le pointeur est en haut (270°), on calcule l'index en fonction
         const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
         
-        resultText.innerHTML = `✨ <strong>${segments[index]}</strong> ! 🍽️`;
+        resultText.innerHTML = `✨ <strong>${segments[index]}</strong>  🍽️`;
     }, 4000);
 });
 
