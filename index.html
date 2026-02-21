@@ -8,40 +8,32 @@
     <title>Ma Roue Menus</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="season-printemps"> <div class="app-container">
+<body class="season-printemps"> 
+    <div class="app-container">
         <header>
-            <h1>🍽️ Qu'est-ce qu'on mange ?</h1>
+            <h1>🍽️ On mange quoi ?</h1>
             <nav id="season-menu">
-                <button onclick="changeSeason('printemps')" class="btn-season active" data-season="printemps">🌱 Printemps</button>
-                <button onclick="changeSeason('ete')" class="btn-season" data-season="ete">☀️ Été</button>
-                <button onclick="changeSeason('automne')" class="btn-season" data-season="automne">🍂 Automne</button>
-                <button onclick="changeSeason('hiver')" class="btn-season" data-season="hiver">❄️ Hiver</button>
+                <button onclick="changeSeason('printemps')" class="btn-season active" data-season="printemps">🌱</button>
+                <button onclick="changeSeason('ete')" class="btn-season" data-season="ete">☀️</button>
+                <button onclick="changeSeason('automne')" class="btn-season" data-season="automne">🍂</button>
+                <button onclick="changeSeason('hiver')" class="btn-season" data-season="hiver">❄️</button>
             </nav>
         </header>
 
-        <main>
-            <div class="wheel-area">
-                <div id="pointer"></div>
-                <canvas id="wheel" width="600" height="600"></canvas>
-            </div>
-            
-            <div class="controls">
-                <button id="spin-btn">LANCER LA ROUE !</button>
-                <div id="result-container">
-                    <p id="result-text">Choisissez une saison et tournez la roue !</p>
-                </div>
-            </div>
-        </main>
+        <div class="wheel-area">
+            <div id="pointer"></div>
+            <canvas id="wheel"></canvas>
+        </div>
+        
+        <div class="result-zone">
+            <p id="result-text">Choisissez une saison et tournez !</p>
+        </div>
+
+        <div class="controls">
+            <button id="spin-btn">LANCER LA ROUE !</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
-    <div id="result-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>Ce soir, on mange...</h2>
-        <div id="modal-plate-name"></div>
-        <button onclick="closeModal()" class="btn-ok">Miam !</button>
-    </div>
-</div>
 </body>
 </html>
