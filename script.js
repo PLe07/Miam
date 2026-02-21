@@ -73,7 +73,7 @@ function drawWheel() {
 spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     isSpinning = true;
-    resultText.innerText = "Suspense... 🎲";
+    resultText.innerText = "Suspense...";
     const segments = dataPlats[currentSeason];
     const spinAngle = Math.floor(Math.random() * 3600) + 2000;
     currentRotation += spinAngle;
@@ -84,7 +84,7 @@ spinBtn.addEventListener('click', () => {
         const actualDeg = currentRotation % 360;
         const segmentAngle = 360 / segments.length;
         const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
-        resultText.innerHTML = `✨ <strong>${segments[index]}</strong> 🍽️`;
+        resultText.innerHTML = `<strong>${segments[index]}</strong>`;
     }, 4000);
 });
 
