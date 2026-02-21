@@ -22,7 +22,7 @@ html, body {
 .app-container {
     background-color: var(--bg-color);
     width: 100%;
-    max-width: 450px;
+    max-width: 1000px;
     height: 100dvh;
     display: flex;
     flex-direction: column;
