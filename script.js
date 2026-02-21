@@ -11,7 +11,7 @@ const dataPlats = {
     printemps: [
         "Filet de veau poêlé & carottes", "Saumon à l'oseille & riz", "Côtelettes d'agneau grillées", "Linguine au citron & crevettes", "Poulet rôti à l'estragon", "Risotto au parmesan & citron", "Escalope milanaise", "Tartine ricotta & radis", "Pavé de cabillaud vapeur", "Sauté de dinde & oignons", "Omelette aux herbes", "Magret de canard aux cerises", "Salade de PDT nouvelles", "Filet de bar grillé", "Boulettes de bœuf menthe", "Tarte fine oignons & lardons", "Gnocchis beurre de sauge", "Sole meunière & riz pilaf", "Brochettes poulet romarin", "Saltimbocca de veau", "Salade de bœuf thaï", "Pizza blanche ricotta", "Crevettes au gingembre", "Rôti de porc au lait", "Tataki de Thon", "Penne crème parmesan", "Daurade aux agrumes", "Burger de veau", "Carpaccio de bœuf pesto", "Sauté de bœuf oignons", "Œufs cocotte à la truffe", "Travers de porc caramélisés", "Lieu noir sauce hollandaise", "Ravioles du Dauphiné", "Jambon braisé au porto", "Salade poulet & avocat", "Brochettes dinde paprika", "Steak de thon grillé", "Escalope dinde moutarde", "Salade de riz au thon", "Gambas à la plancha", "Rôti de bœuf froid", "Tarte à la tomate", "Aiguillettes canard miel", "Spaghetti carbonara", "Poisson croûte noisettes", "Filet mignon au cidre", "Salade pâtes mozzarella", "Cake salé jambon-fromage", "Blanquette de veau"
     ],
-    ete: [ // Corrigé : sans accent pour la clé technique
+    été: [ // Corrigé : sans accent pour la clé technique
         "Tomates anciennes & burrata", "Bœuf BBQ & maïs", "Carpaccio dorade citron vert", "Burger italien", "Gambas au pastis", "Salade Niçoise", "Spaghetti aux palourdes", "Sardines à la plancha", "Moules marinières & frites", "Gaspacho de tomates", "Melon, jambon & féta", "Saumon grillé & tian", "Pizza Margherita", "Salade pâtes pesto", "Wrap poulet grillé", "Club sandwich classique", "Tomates farcies au bœuf", "Poivrons farcis", "Escalope veau citron", "Fish Tacos", "Salade de riz arc-en-ciel", "Aubergines parmigiana", "Paëlla poulet/crevettes", "Dinde marinée citron", "Tartare de bœuf au couteau", "Filet de bar croustillant", "Salade pastèque & féta", "Calamars frits", "Penne Arrabbiata", "Côte de bœuf & tomates", "Salade poulet César", "Bruschetta tomate ail", "Carpaccio de courgettes", "Tartare saumon mangue", "Omelette poivrons confits", "Ribs sauce BBQ", "Lasagnes bolognaise", "Tomates cœurs de bœuf", "Sandwich Banh Mi", "Crevettes ail & persil", "Risotto poivrons rouges", "Porc à l'ananas", "Salade bœuf tiède", "Pizza chorizo poivrons", "Dorade entière au four", "Poulet basquaise", "Melon & jambon serrano", "Linguine thon & câpres", "Gaspacho de pastèque", "Hot-dog gourmet"
     ],
     automne: [
@@ -38,14 +38,14 @@ function changeSeason(season) {
     drawWheel();
     
     // Gestion propre de la liaison (de vs d')
-    const liaison = (season === 'ete' || season === 'hiver') ? "d'" : "de ";
-    const displaySeason = season === 'ete' ? 'été' : season;
+    const liaison = (season === 'été' || season === 'hiver') ? "d'" : "de ";
+    const displaySeason = season === 'été' ? 'été' : season;
     resultText.innerHTML = `Prêt pour un menu ${liaison}<strong>${displaySeason}</strong> ?`;
 }
 
 function getAccentColor() {
     // Les clés ici doivent matcher exactement currentSeason
-    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db' };
+    const colors = { printemps: '#2ecc71', été: '#f1c40f', automne: '#e67e22', hiver: '#3498db' };
     return colors[currentSeason] || '#27ae60';
 }
 
@@ -86,7 +86,7 @@ spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     
     isSpinning = true;
-    resultText.innerHTML = "Suspense... 🎲";
+    resultText.innerHTML = "Suspense...";
     
     const segments = dataPlats[currentSeason];
     const spinAngle = Math.floor(Math.random() * 3600) + 2000;
@@ -105,7 +105,7 @@ spinBtn.addEventListener('click', () => {
         
         // Affichage avec un petit effet visuel
         resultText.style.transform = "scale(1.1)";
-        resultText.innerHTML = `✨ <strong>${segments[index]}</strong> 🍽️`;
+        resultText.innerHTML = `<strong>${segments[index]}</strong>`;
         
         setTimeout(() => {
             resultText.style.transform = "scale(1)";
