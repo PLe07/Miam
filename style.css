@@ -3,6 +3,7 @@
     --accent-color: #27ae60;
 }
 
+/* Couleurs par saison */
 body.season-printemps { --bg-color: #e8f5e9; --accent-color: #2ecc71; }
 body.season-ete { --bg-color: #fff9c4; --accent-color: #f1c40f; }
 body.season-automne { --bg-color: #efebe9; --accent-color: #e67e22; }
@@ -74,7 +75,7 @@ canvas {
 }
 
 .result-zone {
-    min-height: 100px;
+    min-height: 110px; /* Augmenté un peu pour les 2 boutons */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,7 +91,6 @@ canvas {
 
 #result-text {
     display: inline-block;
-    width: auto;
     max-width: 85%;
     font-size: clamp(0.9rem, 3.5vw, 1.3rem);
     font-weight: bold;
@@ -99,23 +99,30 @@ canvas {
     background: rgba(255,255,255,0.7);
     border: 2px solid var(--accent-color);
     text-align: center;
-    transition: transform 0.2s ease;
 }
 
-#recipe-link {
-    display: inline-block;
+/* Gestion de l'alignement des deux liens */
+.button-group {
+    display: flex;
+    gap: 10px;
     margin-top: 10px;
-    font-size: 0.85rem;
-    color: white;
-    text-decoration: none;
-    background: #2c3e50;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-weight: bold;
     animation: fadeIn 0.5s ease;
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+#recipe-link, #whatsapp-link {
+    font-size: 0.85rem;
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#recipe-link { background: #2c3e50; }
+#whatsapp-link { background: #25D366; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
 #spin-btn {
     width: min(90%, 400px);
@@ -128,24 +135,4 @@ canvas {
     border-radius: 15px;
     cursor: pointer;
     margin-bottom: 10px;
-}
-
-#whatsapp-link {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: white;
-    text-decoration: none;
-    background: #25D366; /* Vert WhatsApp */
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    animation: fadeIn 0.5s ease;
-}
-
-/* On change un peu le bouton recette pour qu'ils aillent bien ensemble */
-#recipe-link {
-    background: #2c3e50; /* Couleur sombre pro */
-    margin-top: 10px;
 }
