@@ -115,7 +115,7 @@ header h1 { color: #2c3e50; margin-bottom: 20px; }
 
 /* On s'assure que tout l'écran est utilisé sans défiler */
 html, body {
-    height: 100%;
+    height: 95%;
     overflow: hidden; /* Empêche le scroll haut/bas */
     position: fixed; /* Évite les rebonds bizarres sur iPhone */
     width: 100%;
