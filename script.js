@@ -38,7 +38,7 @@ function changeSeason(season) {
     drawWheel();
     
     // Gestion propre de la liaison (de vs d')
-    const liaison = (season === 'été' || season === 'hiver') ? "d'" : "de ";
+    const liaison = (season === 'printemps') ? "de " : "d'";
     const displaySeason = season === 'été' ? 'été' : season;
     resultText.innerHTML = `Prêt pour un menu ${liaison}<strong>${displaySeason}</strong> ?`;
 }
