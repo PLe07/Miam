@@ -3,6 +3,10 @@ const ctx = canvas.getContext('2d');
 const resultText = document.getElementById('result-text');
 const spinBtn = document.getElementById('spin-btn');
 
+// Configuration du canvas pour la haute définition
+canvas.width = 600;
+canvas.height = 600;
+
 const dataPlats = {
     printemps: [
         "Filet de veau poêlé & carottes", "Saumon à l'oseille & riz", "Côtelettes d'agneau grillées", "Linguine au citron & crevettes", "Poulet rôti à l'estragon", "Risotto au parmesan & citron", "Escalope milanaise", "Tartine ricotta & radis", "Pavé de cabillaud vapeur", "Sauté de dinde & oignons", "Omelette aux herbes", "Magret de canard aux cerises", "Salade de PDT nouvelles", "Filet de bar grillé", "Boulettes de bœuf menthe", "Tarte fine oignons & lardons", "Gnocchis beurre de sauge", "Sole meunière & riz pilaf", "Brochettes poulet romarin", "Saltimbocca de veau", "Salade de bœuf thaï", "Pizza blanche ricotta", "Crevettes au gingembre", "Rôti de porc au lait", "Tataki de Thon", "Penne crème parmesan", "Daurade aux agrumes", "Burger de veau", "Carpaccio de bœuf pesto", "Sauté de bœuf oignons", "Œufs cocotte à la truffe", "Travers de porc caramélisés", "Lieu noir sauce hollandaise", "Ravioles du Dauphiné", "Jambon braisé au porto", "Salade poulet & avocat", "Brochettes dinde paprika", "Steak de thon grillé", "Escalope dinde moutarde", "Salade de riz au thon", "Gambas à la plancha", "Rôti de bœuf froid", "Tarte à la tomate", "Aiguillettes canard miel", "Spaghetti carbonara", "Poisson croûte noisettes", "Filet mignon au cidre", "Salade pâtes mozzarella", "Cake salé jambon-fromage", "Blanquette de veau"
@@ -26,14 +30,18 @@ function changeSeason(season) {
     if (isSpinning) return;
     currentSeason = season;
     
-    // UI Update
     document.body.className = `season-${season}`;
     document.querySelectorAll('.btn-season').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.season === season);
     });
     
     drawWheel();
-    resultText.innerText = `Prêt pour le menu de ${season} ?`;
+    resultText.innerHTML = `Prêt pour le menu de <strong>${season}</strong> ?`;
+}
+
+function getAccentColor() {
+    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db' };
+    return colors[currentSeason] || '#27ae60';
 }
 
 function drawWheel() {
@@ -46,37 +54,32 @@ function drawWheel() {
     segments.forEach((plat, i) => {
         const angle = i * anglePerSegment;
         
-        // Couleur alternée
         ctx.beginPath();
         ctx.fillStyle = i % 2 === 0 ? '#ffffff' : getAccentColor();
         ctx.moveTo(300, 300);
         ctx.arc(300, 300, 300, angle, angle + anglePerSegment);
         ctx.fill();
         ctx.strokeStyle = '#ddd';
+        ctx.lineWidth = 1;
         ctx.stroke();
 
-        // Texte
         ctx.save();
         ctx.translate(300, 300);
         ctx.rotate(angle + anglePerSegment / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = i % 2 === 0 ? "#333" : "#fff";
-        ctx.font = "bold 10px Arial";
-        // On n'affiche le texte que s'il y a de la place ou on le cache pour la lisibilité
-        ctx.fillText(plat.substring(0, 20), 280, 5);
+        ctx.font = "bold 12px Arial";
+        ctx.fillText(plat.substring(0, 22), 280, 5);
         ctx.restore();
     });
-}
-
-function getAccentColor() {
-    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db' };
-    return colors[currentSeason];
 }
 
 spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     
     isSpinning = true;
+    resultText.innerText = "Suspense... 🎲";
+    
     const segments = dataPlats[currentSeason];
     const spinAngle = Math.floor(Math.random() * 3600) + 2000;
     currentRotation += spinAngle;
@@ -86,37 +89,16 @@ spinBtn.addEventListener('click', () => {
     
     setTimeout(() => {
         isSpinning = false;
+        
+        // Calcul du résultat
         const actualDeg = currentRotation % 360;
         const segmentAngle = 360 / segments.length;
-        // Calcul de l'index pointé (le pointeur est en haut à 270 deg par rapport au canvas)
+        // Le pointeur est en haut (270°), on calcule l'index en fonction
         const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
-        resultText.innerHTML = `✨ On mange : <strong>${segments[index]}</strong> ! 🍽️`;
+        
+        resultText.innerHTML = `✨ Ce soir : <strong>${segments[index]}</strong> ! 🍽️`;
     }, 4000);
 });
 
-// Initialisation
+// Initialisation au chargement
 drawWheel();
-
-// Ajoute ces fonctions à la fin de ton fichier
-const modal = document.getElementById("result-modal");
-const modalPlateName = document.getElementById("modal-plate-name");
-
-function showResult(plate) {
-    modalPlateName.innerText = plate;
-    modal.style.display = "block";
-}
-
-function closeModal() {
-    modal.style.display = "none";
-}
-
-// Dans ton bouton spin (setTimeout), remplace la ligne du texte par :
-setTimeout(() => {
-    isSpinning = false;
-    const actualDeg = currentRotation % 360;
-    const segmentAngle = 360 / segments.length;
-    const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
-    
-    // On affiche le résultat dans le pop-up !
-    showResult(segments[index]); 
-}, 4000);
