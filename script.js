@@ -95,23 +95,41 @@ spinBtn.addEventListener('click', () => {
     canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     canvas.style.transform = `rotate(${currentRotation}deg)`;
     
+    // ... (garde tout ton début de script)
+
+setTimeout(() => {
+    isSpinning = false;
+    const actualDeg = currentRotation % 360;
+    const segments = dataPlats[currentSeason];
+    const segmentAngle = 360 / segments.length;
+    const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
+    
+    const platGagnant = segments[index];
+
+    // 1. Afficher le résultat avec l'effet de scale
+    resultText.style.transform = "scale(1.1)";
+    resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
+    
+    // 2. Configurer et afficher le bouton de recette
+    const recipeLink = document.getElementById('recipe-link');
+    recipeLink.href = `https://www.google.com/search?q=recette+${encodeURIComponent(platGagnant)}`;
+    recipeLink.style.display = "inline-block";
+
+    // 3. Explosion de confettis !
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: [getAccentColor(), '#ffffff']
+    });
+
+    // 4. Vibration sur téléphone
+    if (window.navigator.vibrate) window.navigator.vibrate(100);
+
     setTimeout(() => {
-        isSpinning = false;
-        const actualDeg = currentRotation % 360;
-        const segmentAngle = 360 / segments.length;
-        
-        // Index pointé (le pointeur est en haut à 270°)
-        const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
-        
-        // Affichage avec un petit effet visuel
-        resultText.style.transform = "scale(1.1)";
-        resultText.innerHTML = `<strong>${segments[index]}</strong>`;
-        
-        setTimeout(() => {
-            resultText.style.transform = "scale(1)";
-        }, 200);
-    }, 4000);
-});
+        resultText.style.transform = "scale(1)";
+    }, 200);
+}, 4000);
 
 // Lancement initial
 drawWheel();
