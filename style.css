@@ -129,3 +129,23 @@ canvas {
     cursor: pointer;
     margin-bottom: 10px;
 }
+
+#whatsapp-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: white;
+    text-decoration: none;
+    background: #25D366; /* Vert WhatsApp */
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+/* On change un peu le bouton recette pour qu'ils aillent bien ensemble */
+#recipe-link {
+    background: #2c3e50; /* Couleur sombre pro */
+    margin-top: 10px;
+}
