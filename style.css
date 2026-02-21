@@ -28,13 +28,13 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center; /* Centre horizontalement tous les enfants */
-    text-align: center;   /* Centre le texte à l'intérieur des blocs */
+    align-items: center;
+    text-align: center;
     padding: clamp(10px, 3vh, 30px);
     box-sizing: border-box;
 }
 
-/* 2. TITRE BIEN CENTRÉ */
+/* 2. TITRE ET MENU */
 header {
     width: 100%;
 }
@@ -48,7 +48,7 @@ header h1 {
 
 #season-menu { 
     display: flex; 
-    justify-content: center; /* Centre les boutons de saison */
+    justify-content: center;
     gap: clamp(5px, 2vw, 12px); 
 }
 
@@ -91,7 +91,7 @@ canvas {
     z-index: 10;
 }
 
-/* 4. ZONE DE RÉSULTAT ET BOUTONS DYNAMIQUES */
+/* 4. ZONE DE RÉSULTAT */
 .result-zone {
     min-height: 110px;
     display: flex;
@@ -119,31 +119,24 @@ canvas {
     text-align: center;
 }
 
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-    animation: fadeIn 0.5s ease;
-}
-
-#recipe-link, #whatsapp-link {
-    font-size: 0.85rem;
+/* Style du bouton Cookidoo seul */
+#recipe-link {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.9rem;
     color: white;
     text-decoration: none;
-    padding: 10px 18px;
+    background: #2c3e50; /* Couleur sombre pour bien ressortir */
+    padding: 10px 22px;
     border-radius: 20px;
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    animation: fadeIn 0.5s ease;
 }
-
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 5. BOUTON LANCER BIEN CENTRÉ */
+/* 5. BOUTON LANCER */
 .controls {
     width: 100%;
     display: flex;
@@ -153,7 +146,6 @@ canvas {
 
 #spin-btn {
     width: min(90%, 400px);
-    margin: 0 auto;
     padding: 18px;
     font-size: 1.2rem;
     font-weight: bold;
