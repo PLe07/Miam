@@ -112,3 +112,53 @@ header h1 { color: #2c3e50; margin-bottom: 20px; }
     color: #2c3e50;
     font-weight: 500;
 }
+
+/* On s'assure que tout l'écran est utilisé sans défiler */
+html, body {
+    height: 100%;
+    overflow: hidden; /* Empêche le scroll haut/bas */
+    position: fixed; /* Évite les rebonds bizarres sur iPhone */
+    width: 100%;
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* La roue devient flexible en taille */
+.wheel-area {
+    position: relative;
+    width: 85vw; /* 85% de la largeur de l'écran */
+    height: 85vw;
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+}
+
+#wheel {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Bouton plus gros pour le pouce */
+#spin-btn {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.2rem;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+#season-menu {
+    gap: 5px;
+}
+
+.btn-season {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
