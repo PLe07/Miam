@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 const resultText = document.getElementById('result-text');
 const spinBtn = document.getElementById('spin-btn');
 const recipeLink = document.getElementById('recipe-link');
+const whatsappLink = document.getElementById('whatsapp-link');
 
 canvas.width = 600;
 canvas.height = 600;
@@ -91,18 +92,30 @@ spinBtn.addEventListener('click', () => {
     currentRotation += spinAngle;
     canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     canvas.style.transform = `rotate(${currentRotation}deg)`;
-    setTimeout(() => {
-        isSpinning = false;
-        const actualDeg = currentRotation % 360;
-        const index = Math.floor(((360 - actualDeg + 270) % 360) / (360 / segments.length));
-        const platGagnant = segments[index];
-        resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
-        // Lien Cookidoo direct
-        recipeLink.href = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
-        recipeLink.style.display = "inline-block";
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
-        if (window.navigator.vibrate) window.navigator.vibrate(100);
-    }, 4000);
-});
+    
+setTimeout(() => {
+    isSpinning = false;
+    const actualDeg = currentRotation % 360;
+    const segments = dataPlats[currentSeason];
+    const index = Math.floor(((360 - actualDeg + 270) % 360) / (360 / segments.length));
+    const platGagnant = segments[index];
+
+    resultText.innerHTML = `✨ <strong>${platGagnant}</strong> 🍽️`;
+
+    // 1. Lien Cookidoo
+    const cookidooUrl = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
+    recipeLink.href = cookidooUrl;
+    recipeLink.style.display = "inline-block";
+
+    // 2. Lien WhatsApp avec message pré-rempli
+    const message = `Ce soir on mange : ${platGagnant} ! 🍽️\nTrouve la recette ici : ${cookidooUrl}`;
+    whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    whatsappLink.style.display = "inline-block";
+
+    // 3. Effets (Confettis & Vibration)
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [getAccentColor(), '#ffffff'] });
+    if (window.navigator.vibrate) window.navigator.vibrate(100);
+
+}, 4000);
 
 drawWheel();
