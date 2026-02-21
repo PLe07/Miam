@@ -96,3 +96,27 @@ spinBtn.addEventListener('click', () => {
 
 // Initialisation
 drawWheel();
+
+// Ajoute ces fonctions à la fin de ton fichier
+const modal = document.getElementById("result-modal");
+const modalPlateName = document.getElementById("modal-plate-name");
+
+function showResult(plate) {
+    modalPlateName.innerText = plate;
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+// Dans ton bouton spin (setTimeout), remplace la ligne du texte par :
+setTimeout(() => {
+    isSpinning = false;
+    const actualDeg = currentRotation % 360;
+    const segmentAngle = 360 / segments.length;
+    const index = Math.floor(((360 - actualDeg + 270) % 360) / segmentAngle);
+    
+    // On affiche le résultat dans le pop-up !
+    showResult(segments[index]); 
+}, 4000);
