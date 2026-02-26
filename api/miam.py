@@ -1,33 +1,30 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-import urllib.request
-import urllib.error
+import requests
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
-            # 1. Lecture des données envoyées par ton site
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length))
             
-            # 2. Nettoyage de l'image base64
+            # 1. Préparation de l'image
             base64_image = post_data['image']
             if "," in base64_image:
                 base64_image = base64_image.split(",")[1]
             
-            # 3. Vérification de la clé
             api_key = os.environ.get("GEMINI_API_KEY")
             if not api_key:
-                raise ValueError("La clé GEMINI_API_KEY est introuvable sur Vercel.")
+                self.send_error_msg("Clé API manquante sur Vercel.")
+                return
 
-            # 4. Connexion DIRECTE à Google (sans passer par leur package bugué)
+            # 2. Appel direct à Google sans leur librairie buguée
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-            
             payload = {
                 "contents": [{
                     "parts": [
-                        {"text": "Analyse cette photo. Liste 10 plats simples. Réponds UNIQUEMENT en JSON strict comme ceci: [\"Plat 1\", \"Plat 2\"]"},
+                        {"text": "Liste 10 plats simples avec ces aliments. Réponds UNIQUEMENT en format JSON strict : [\"Plat 1\", \"Plat 2\"]"},
                         {"inline_data": {
                             "mime_type": "image/jpeg",
                             "data": base64_image
@@ -36,37 +33,33 @@ class handler(BaseHTTPRequestHandler):
                 }]
             }
             
-            # 5. Envoi de la requête
-            req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json'})
+            # 3. Sécurité : On coupe à 8 secondes (Vercel crashe à 10s)
+            r = requests.post(url, json=payload, headers={'Content-Type': 'application/json'}, timeout=8)
             
-            with urllib.request.urlopen(req) as response:
-                result = json.loads(response.read().decode('utf-8'))
+            if r.status_code != 200:
+                self.send_error_msg(f"Refus de Google ({r.status_code}): {r.text[:50]}...")
+                return
                 
-            # 6. Extraction de la réponse
+            result = r.json()
             text_response = result['candidates'][0]['content']['parts'][0]['text'].strip()
             
-            # 7. Nettoyage du JSON
+            # 4. Nettoyage
             if "```json" in text_response:
                 text_response = text_response.split("```json")[1].split("```")[0].strip()
             elif "```" in text_response:
                 text_response = text_response.split("```")[1].strip()
             
-            # 8. Renvoi au site
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(text_response.encode('utf-8'))
 
-        except urllib.error.HTTPError as e:
-            error_msg = e.read().decode('utf-8')
-            self.send_error_msg(f"Erreur API Google : {e.code} - {error_msg}")
         except Exception as e:
-            self.send_error_msg(f"Erreur technique : {str(e)}")
+            # S'il y a un bug, on l'envoie au téléphone !
+            self.send_error_msg(f"Détail du crash : {str(e)}")
 
     def send_error_msg(self, msg):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps([f"❌ {msg}"]).encode('utf-8'))    self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps([f"❌ Erreur IA : {str(e)}"]).encode())
+        self.wfile.write(json.dumps([f"❌ {msg}"]).encode('utf-8'))
