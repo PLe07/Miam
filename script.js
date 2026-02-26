@@ -77,8 +77,9 @@ function drawWheel() {
         ctx.rotate(angle + anglePerSegment / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = i % 2 === 0 ? "#333" : "#fff";
-        ctx.font = "bold 9px Arial";
-        ctx.fillText(plat.substring(0, 25), 290, 4);
+        // Remplace ces deux lignes dans ta fonction drawWheel
+ctx.font = "bold 7px Arial"; // On passe de 9px à 7px pour la finesse
+ctx.fillText(plat.substring(0, 15), 290, 4); // On ne montre que les 15 premiers caractères sur la roue
         ctx.restore();
     });
 }
