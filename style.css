@@ -146,8 +146,8 @@ canvas {
 #spin-btn { background: #2c3e50; }
 #spin-btn:active { transform: scale(0.96); }
 
-/* Couleurs dynamiques du bouton Scan */
-body.season-printemps #scan-btn { background-color: #2ecc71; }
-body.season-ete #scan-btn { background-color: #f1c40f; }
-body.season-automne #scan-btn { background-color: #e67e22; }
-body.season-hiver #scan-btn { background-color: #3498db; }
+/* 3. Le bouton SCANNER change de couleur selon la saison */
+body.season-printemps #scan-btn { background-color: #2ecc71; color: white; }
+body.season-ete #scan-btn { background-color: #f1c40f; color: #333; } /* Noir sur jaune pour la lecture */
+body.season-automne #scan-btn { background-color: #e67e22; color: white; }
+body.season-hiver #scan-btn { background-color: #3498db; color: white; }
