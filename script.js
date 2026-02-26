@@ -3,6 +3,8 @@ const ctx = canvas.getContext('2d');
 const resultText = document.getElementById('result-text');
 const spinBtn = document.getElementById('spin-btn');
 const recipeLink = document.getElementById('recipe-link');
+const scanBtn = document.getElementById('scan-btn'); // Nouveau bouton
+const fileInput = document.getElementById('frigo-upload'); // Input invisible
 
 // Configuration du canvas
 canvas.width = 600;
@@ -24,7 +26,8 @@ const dataPlats = {
     hiver: [
         "Saint-Jacques & poireaux", "Tartiflette", "Pot-au-feu", "Raclette", "Fondue savoyarde", "Mont d'Or au four", "Boeuf carotte 12h", "Lasagnes gratinées", "Parmentier de bœuf", "Welsh au cheddar", "Gratin macaronis comté", "Filet bar sauce agrumes", "Saucisse de Morteau", "Daube provençale", "Risotto vin rouge & saucisse", "Aligot & saucisse", "Gratin crozets beaufort", "Poulet au Riesling", "Ravioles gratinées", "Filet mignon patate douce", "Côte de bœuf roquefort", "Spaghetti crème parmesan", "Velouté carottes coco", "Burger montagnard", "Poisson gratiné béchamel", "Sauté bœuf poivre noir", "Croque-monsieur", "Gnocchis crème jambon", "Épaule d'agneau confite", "Tajine poulet citron", "Truffade auvergnate", "Mac & Cheese", "Lieu noir beurre noisette", "Carbonade pain d'épices", "Tourte canard & PDT", "Poulet frit Kentucky", "Pasta crème de truffe", "Camembert rôti miel", "Rôti de bœuf en croûte", "Linguine saumon fumé", "Jarret porc laqué", "Chili con carne (sans haricots)", "Gratin PDT lard oignons", "Escalope veau parmesan", "Crevettes aigre-douce", "Boeuf Wellington", "Brandade de morue", "Saucisson brioché", "Risotto poulet parmesan", "Endives au jambon",
         "Tartiflette au Reblochon", "Pot-au-feu carotte et PDT", "Raclette et pommes de terre", "Fondue savoyarde et pain", "Saucisse Morteau PDT vapeur", "Risotto vin blanc lardons", "Lasagnes bolognaise gratin", "Poulet à la crème et riz", "Gratin dauphinois traditionnel", "Boulettes bœuf poivre riz", "Hachis parmentier maison", "Sauté porc tomate chorizo", "Poisson blanc gratiné fromage", "Risotto au comté et jambon", "Boulettes dinde sauce suprême", "Pâtes crème parmesan noix", "Sauté dinde carottes miel", "Salade PDT alsacienne", "Poisson beurre citron riz", "Riz façon risotto safran", "Sauté boeuf vin rouge riz", "Gratin crozets jambon cru", "Poulet rôti moutarde riz", "Salade pâtes fromage jambon", "Poisson papillote purée panais", "Risotto fromages montagne", "Boulettes boeuf tomate ail", "Pâtes carbonara Thermomix", "Sauté porc pommes cidre", "Poisson crème poireau riz", "Gratin de pâtes au cheddar", "Boulettes dinde fromage riz", "Pâtes crème de noix jambon", "Risotto à la tomate séchée", "Sauté dinde épices d'hiver", "Salade boeuf oignons confits", "Poisson vapeur carottes riz", "Boulettes boeuf façon kefta", "Pâtes crème fromage bleu", "Sauté porc crème moutarde", "Gratin PDT lardons fumés", "Boulettes dinde italienne", "Pâtes sauce tomate basilic", "Risotto jambon et emmental", "Sauté boeuf carottes riz", "Poisson four crème échalote", "Boulettes poisson sauce blanche", "Riz pilaf oignons et herbes", "Salade pâtes jambon Paris", "Spaghetti crème de parmesan"
-    ]
+    ],
+    frigo: [] // Contiendra les plats générés par l'IA
 };
 
 let currentSeason = 'printemps';
@@ -39,19 +42,21 @@ function changeSeason(season) {
     drawWheel();
     
     const liaison = (season === 'printemps') ? "de " : "d'";
-    const displaySeason = season === 'ete' ? 'été' : season;
+    const displaySeason = (season === 'ete') ? 'été' : (season === 'frigo' ? 'Spécial Frigo 🤖' : season);
     resultText.innerHTML = `Prêt pour un menu ${liaison}<strong>${displaySeason}</strong> ?`;
     
     recipeLink.style.display = "none";
 }
 
 function getAccentColor() {
-    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db' };
+    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db', frigo: '#27ae60' };
     return colors[currentSeason] || '#27ae60';
 }
 
 function drawWheel() {
     const segments = dataPlats[currentSeason];
+    if (segments.length === 0) return; // Sécurité si le frigo est vide
+
     const numSegments = segments.length;
     const anglePerSegment = (Math.PI * 2) / numSegments;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -76,14 +81,58 @@ function drawWheel() {
     });
 }
 
+// LOGIQUE DE SCAN IA
+scanBtn.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    resultText.innerHTML = "⏳ <strong>Analyse du frigo en cours...</strong>";
+    
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+        try {
+            const response = await fetch('/api/miam', {
+                method: 'POST',
+                body: JSON.stringify({ image: reader.result }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) throw new Error("Erreur serveur");
+
+            const nouveauxPlats = await response.json();
+            
+            // On injecte les plats dans la catégorie frigo
+            dataPlats.frigo = nouveauxPlats;
+            
+            // On bascule la roue sur le mode frigo
+            changeSeason('frigo');
+            
+            resultText.innerHTML = "✅ <strong>Frigo scanné !</strong> Tourne la roue 🤖";
+            confetti({ particleCount: 150, spread: 100 });
+            
+        } catch (err) {
+            resultText.innerText = "❌ Erreur : Impossible d'analyser l'image.";
+            console.error(err);
+        }
+    };
+});
+
+// LOGIQUE DU SPIN
 spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
+    const segments = dataPlats[currentSeason];
+    if (segments.length === 0) {
+        resultText.innerText = "Scanne ton frigo d'abord !";
+        return;
+    }
+
     isSpinning = true;
-    
     resultText.innerHTML = "Suspense...";
     recipeLink.style.display = "none";
     
-    const segments = dataPlats[currentSeason];
     const spinAngle = Math.floor(Math.random() * 3600) + 2000;
     currentRotation += spinAngle;
     
@@ -101,7 +150,7 @@ spinBtn.addEventListener('click', () => {
 
         // Mise à jour du lien Thermomix (Cookidoo)
         recipeLink.href = `https://cookidoo.fr/search/fr-FR?query=${encodeURIComponent(platGagnant)}`;
-        recipeLink.innerHTML = "Thermomix"; // <-- AJOUTE CETTE LIGNE ICI
+        recipeLink.innerHTML = "Thermomix";
         recipeLink.style.display = "inline-block";
 
         // Effets visuels
@@ -111,4 +160,5 @@ spinBtn.addEventListener('click', () => {
     }, 4000);
 });
 
+// Initialisation
 drawWheel();
