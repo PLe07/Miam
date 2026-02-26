@@ -36,20 +36,17 @@
     </div>
 </div>
 
-        <div class="controls">
-            <button id="spin-btn">LANCER LA ROUE !</button>
+<div class="controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; margin-bottom: 20px;">
+            <input type="file" id="frigo-upload" accept="image/*" style="display: none;">
+            
+            <button id="scan-btn" style="width: min(90%, 400px); padding: 15px; font-size: 1.1rem; font-weight: bold; background: #27ae60; color: white; border: none; border-radius: 15px; cursor: pointer; transition: transform 0.1s;">
+                📸 SCANNER MON FRIGO
+            </button>
+
+            <button id="spin-btn" style="width: min(90%, 400px); padding: 18px; font-size: 1.2rem; font-weight: bold; background: #2c3e50; color: white; border: none; border-radius: 15px; cursor: pointer; transition: transform 0.1s;">
+                LANCER LA ROUE !
+            </button>
         </div>
-    </div>
-
-   <div class="controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-    <input type="file" id="frigo-upload" accept="image/*" style="display: none;">
-    
-    <button id="scan-btn" style="width: min(90%, 400px); padding: 15px; font-size: 1rem; font-weight: bold; background: #27ae60; color: white; border: none; border-radius: 15px; cursor: pointer;">
-        📸 SCANNER MON FRIGO
-    </button>
-
-    <button id="spin-btn">LANCER LA ROUE !</button>
-</div>
  
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
