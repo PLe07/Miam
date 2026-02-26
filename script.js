@@ -122,7 +122,23 @@ fileInput.addEventListener('change', async (e) => {
                     headers: { 'Content-Type': 'application/json' }
                 });
 
-                const nouveauxPlats = await response.json();
+                // On lit le texte brut renvoyé par Vercel
+                const responseText = await response.text();
+
+                if (!response.ok) {
+                    resultText.innerHTML = `<strong>❌ Erreur Serveur (${response.status})</strong><br>Vercel a planté.`;
+                    return;
+                }
+
+                // On tente de lire le JSON
+                let nouveauxPlats;
+                try {
+                    nouveauxPlats = JSON.parse(responseText);
+                } catch (e) {
+                    resultText.innerHTML = `<strong>❌ Vercel a renvoyé du texte, pas du JSON.</strong>`;
+                    console.error("Réponse Vercel :", responseText);
+                    return;
+                }
 
                 if (nouveauxPlats[0] && nouveauxPlats[0].startsWith("❌")) {
                     resultText.innerHTML = `<strong>${nouveauxPlats[0]}</strong>`;
@@ -133,8 +149,10 @@ fileInput.addEventListener('change', async (e) => {
                 changeSeason('frigo');
                 resultText.innerHTML = "✅ <strong>Frigo scanné !</strong> Tourne la roue 🤖";
                 confetti({ particleCount: 150, spread: 100 });
+                
             } catch (err) {
-                resultText.innerHTML = "❌ <strong>Erreur réseau.</strong>";
+                // Si la connexion coupe totalement
+                resultText.innerHTML = `❌ <strong>Le serveur a coupé :</strong> ${err.message}`;
             }
         };
     };
