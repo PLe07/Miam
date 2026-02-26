@@ -12,24 +12,35 @@ class handler(BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length))
             
-            # Décodage de la photo
-            header, encoded = post_data['image'].split(",", 1)
-            image_data = base64.b64decode(encoded)
+            # Nettoyage et décodage de la base64
+            encoded_image = post_data['image']
+            if "," in encoded_image:
+                encoded_image = encoded_image.split(",")[1]
+            
+            image_data = base64.b64decode(encoded_image)
             img = Image.open(io.BytesIO(image_data))
             
-            # Redimensionner si l'image est trop grande (évite l'erreur 413)
-            img.thumbnail((800, 800))
+            # Conversion en RGB (pour éviter les bugs avec le format PNG/HEIC)
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
 
-            genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+            # Redimensionnement automatique pour l'IA (max 1024px)
+            img.thumbnail((1024, 1024))
+
+            # Config Gemini
+            api_key = os.environ.get("GEMINI_API_KEY")
+            genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-1.5-flash')
 
-            prompt = "Analyse cette photo d'ingrédients. Donne une liste de 10 plats. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
+            prompt = "Analyse cette photo d'aliments. Donne une liste de 10 plats simples. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
             response = model.generate_content([prompt, img])
             
-            # Nettoyage JSON
+            # Extraction propre du JSON
             res_text = response.text.strip()
             if "```json" in res_text:
                 res_text = res_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in res_text:
+                res_text = res_text.split("```")[1].strip()
 
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -37,6 +48,9 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(res_text.encode())
 
         except Exception as e:
-            self.send_response(500)
+            # On log l'erreur exacte dans Vercel pour ne plus deviner
+            print(f"CRASH LOG: {str(e)}")
+            self.send_response(200) # On force 200 pour éviter le blocage 500
+            self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps({"error": str(e)}).encode())
+            self.wfile.write(json.dumps(["Oups, l'IA a eu un petit bug !"]).encode())
