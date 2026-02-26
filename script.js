@@ -93,35 +93,56 @@ fileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    resultText.innerHTML = "⏳ <strong>Analyse du frigo en cours...</strong>";
+    resultText.innerHTML = "⏳ <strong>Compression et analyse...</strong>";
     
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
-        try {
-            const response = await fetch('/api/miam', {
-                method: 'POST',
-                body: JSON.stringify({ image: reader.result }),
-                headers: { 'Content-Type': 'application/json' }
-            });
+        const img = new Image();
+        img.src = reader.result;
+        img.onload = async () => {
+            // COMPRESSION CÔTÉ TÉLÉPHONE
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800; // On réduit la taille pour le réseau
+            let width = img.width;
+            let height = img.height;
 
-            if (!response.ok) throw new Error("Erreur serveur");
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_WIDTH) {
+                    width *= MAX_WIDTH / height;
+                    height = MAX_WIDTH;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // On transforme en JPEG qualité 70% (très léger !)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
-            const nouveauxPlats = await response.json();
-            
-            // On injecte les plats dans la catégorie frigo
-            dataPlats.frigo = nouveauxPlats;
-            
-            // On bascule la roue sur le mode frigo
-            changeSeason('frigo');
-            
-            resultText.innerHTML = "✅ <strong>Frigo scanné !</strong> Tourne la roue 🤖";
-            confetti({ particleCount: 150, spread: 100 });
-            
-        } catch (err) {
-            resultText.innerText = "❌ Erreur : Impossible d'analyser l'image.";
-            console.error(err);
-        }
+            try {
+                const response = await fetch('/api/miam', {
+                    method: 'POST',
+                    body: JSON.stringify({ image: compressedBase64 }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const nouveauxPlats = await response.json();
+                dataPlats.frigo = nouveauxPlats;
+                changeSeason('frigo');
+                resultText.innerHTML = "✅ <strong>Prêt !</strong> Tourne la roue 🤖";
+                confetti({ particleCount: 150, spread: 100 });
+                
+            } catch (err) {
+                resultText.innerText = "❌ Trop lourd ou erreur réseau.";
+            }
+        };
     };
 });
 
