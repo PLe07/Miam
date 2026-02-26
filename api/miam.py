@@ -9,20 +9,24 @@ class handler(BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length))
             
-            # Décodage image
+            # Décodage de l'image
             encoded = post_data['image'].split(",")[1] if "," in post_data['image'] else post_data['image']
             img = Image.open(io.BytesIO(base64.b64decode(encoded)))
-            img.thumbnail((512, 512)) # On réduit encore pour la vitesse
+            img.thumbnail((512, 512))
 
-            # Connexion stable
+            # Connexion
             genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-            model = genai.GenerativeModel("gemini-1.5-flash")
-
-            # Demande simplifiée
-            prompt = "Analyse cette photo. Liste 10 plats simples. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
-            response = model.generate_content([prompt, img])
             
-            # Nettoyage JSON strict
+            # Tentative avec le modèle Flash (rapide)
+            try:
+                model = genai.GenerativeModel("gemini-1.5-flash")
+                response = model.generate_content(["Liste 10 plats simples (JSON uniquement: ['Plat 1'])", img])
+            except:
+                # Si Flash échoue (ton erreur 404), on tente le modèle Pro Vision (plus ancien mais compatible)
+                model = genai.GenerativeModel("gemini-pro-vision")
+                response = model.generate_content(["Liste 10 plats simples (JSON uniquement: ['Plat 1'])", img])
+
+            # Nettoyage de la réponse
             res_text = response.text.strip()
             if "```" in res_text:
                 res_text = res_text.split("```")[1].replace("json", "").strip()
@@ -33,7 +37,7 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(res_text.encode())
 
         except Exception as e:
-            self.send_response(200) # On envoie 200 pour que le JS puisse lire l'erreur
+            self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps([f"❌ Erreur : {str(e)}"]).encode())
+            self.wfile.write(json.dumps([f"❌ Erreur IA : {str(e)}"]).encode())
