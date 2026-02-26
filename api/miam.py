@@ -32,8 +32,8 @@ class handler(BaseHTTPRequestHandler):
                 }]
             }
             
-            # 3. L'ADRESSE OFFICIELLE ET STABLE (v1 et gemini-1.5-flash)
-            url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}"
+            # 3. LE NOUVEAU MODÈLE GOOGLE (Gemini 2.0 Flash)
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
             
             # On laisse 9 secondes max (Vercel coupe à 10s)
             r = requests.post(url, json=payload, headers={'Content-Type': 'application/json'}, timeout=9)
@@ -42,7 +42,7 @@ class handler(BaseHTTPRequestHandler):
                 self.send_error_msg(f"Erreur Google ({r.status_code}): {r.text[:100]}...")
                 return
                 
-            # 4. On lit la réponse magique
+            # 4. On lit la réponse
             result = r.json()
             text_response = result['candidates'][0]['content']['parts'][0]['text'].strip()
             
