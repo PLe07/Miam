@@ -84,7 +84,7 @@ canvas {
     width: 0; height: 0;
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
-    border-top: 30px solid #e74c3c; /* Rouge par défaut */
+    border-top: 25px solid #e74c3c; /* Rouge par défaut */
     z-index: 10;
     margin-top: -5px; /* Ne touche pas les icônes mais reste sur la roue */
 }
