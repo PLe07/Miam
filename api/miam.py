@@ -1,10 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import google.generativeai as genai
-import json
-import base64
-import os
+import json, base64, os, io
 from PIL import Image
-import io
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -12,34 +9,31 @@ class handler(BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = json.loads(self.rfile.read(content_length))
             
-            encoded_image = post_data['image']
-            if "," in encoded_image:
-                encoded_image = encoded_image.split(",")[1]
-            
-            image_data = base64.b64decode(encoded_image)
-            img = Image.open(io.BytesIO(image_data))
+            # Décodage image
+            encoded = post_data['image'].split(",")[1] if "," in post_data['image'] else post_data['image']
+            img = Image.open(io.BytesIO(base64.b64decode(encoded)))
+            img.thumbnail((512, 512)) # On réduit encore pour la vitesse
 
-            api_key = os.environ.get("GEMINI_API_KEY")
-            # Utilisation explicite de la version stable pour éviter l'erreur 404
-            genai.configure(api_key=api_key)
-            
-         # Remplace la ligne existante par celle-ci pour forcer la version stable
-model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+            # Connexion stable
+            genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+            model = genai.GenerativeModel("gemini-1.5-flash")
 
-            prompt = "Regarde ces ingrédients. Donne 10 plats. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
+            # Demande simplifiée
+            prompt = "Analyse cette photo. Liste 10 plats simples. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
             response = model.generate_content([prompt, img])
             
+            # Nettoyage JSON strict
             res_text = response.text.strip()
-            if "```json" in res_text:
-                res_text = res_text.split("```json")[1].split("```")[0].strip()
-            
+            if "```" in res_text:
+                res_text = res_text.split("```")[1].replace("json", "").strip()
+
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(res_text.encode())
 
         except Exception as e:
-            self.send_response(200)
+            self.send_response(200) # On envoie 200 pour que le JS puisse lire l'erreur
             self.send_header('Content-type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps([f"❌ Erreur Google : {str(e)}"]).encode())
+            self.wfile.write(json.dumps([f"❌ Erreur : {str(e)}"]).encode())
