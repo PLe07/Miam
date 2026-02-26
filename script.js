@@ -34,17 +34,22 @@ let currentSeason = 'printemps';
 let currentRotation = 0;
 let isSpinning = false;
 
+// Remplace juste ta fonction changeSeason par celle-ci
 function changeSeason(season) {
     if (isSpinning) return;
     currentSeason = season;
     document.body.className = `season-${season}`;
     document.querySelectorAll('.btn-season').forEach(btn => btn.classList.toggle('active', btn.dataset.season === season));
+    
+    // On met à jour la couleur du pointeur triangle
+    const pointer = document.getElementById('pointer');
+    const colors = { printemps: '#2ecc71', ete: '#f1c40f', automne: '#e67e22', hiver: '#3498db', frigo: '#27ae60' };
+    pointer.style.borderTopColor = colors[season] || '#e74c3c';
+
     drawWheel();
     
-    const liaison = (season === 'printemps') ? "de " : "d'";
     const displaySeason = (season === 'ete') ? 'été' : (season === 'frigo' ? 'Spécial Frigo 🤖' : season);
-    resultText.innerHTML = `Prêt pour un menu ${liaison}<strong>${displaySeason}</strong> ?`;
-    
+    resultText.innerHTML = `Prêt pour un menu de <strong>${displaySeason}</strong> ?`;
     recipeLink.style.display = "none";
 }
 
