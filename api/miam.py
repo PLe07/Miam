@@ -23,8 +23,8 @@ class handler(BaseHTTPRequestHandler):
             # Utilisation explicite de la version stable pour éviter l'erreur 404
             genai.configure(api_key=api_key)
             
-            # On tente le modèle flash, s'il échoue on a un message clair
-            model = genai.GenerativeModel('gemini-1.5-flash')
+         # Remplace la ligne existante par celle-ci pour forcer la version stable
+model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
             prompt = "Regarde ces ingrédients. Donne 10 plats. Réponds UNIQUEMENT en JSON : ['Plat 1', 'Plat 2']"
             response = model.generate_content([prompt, img])
